@@ -25,9 +25,10 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         /* NAVBAR */
@@ -38,8 +39,6 @@
             padding: 16px 48px;
             background: var(--white);
             box-shadow: 0 1px 12px rgba(0,0,0,0.06);
-            position: sticky;
-            top: 0;
             z-index: 100;
         }
 
@@ -88,7 +87,8 @@
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            min-height: calc(100vh - 65px);
+            height: calc(100vh - 65px);
+            overflow: hidden;
         }
 
         /* LEFT PANEL */
@@ -96,8 +96,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 80px;
+            padding: 20px 40px;
             background: var(--bg);
+            overflow-y: auto;
         }
 
         .form-card {

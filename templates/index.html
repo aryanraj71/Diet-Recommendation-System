@@ -754,6 +754,23 @@
             .action-bar { flex-direction: column; }
             .comparison-metric-cards { grid-template-columns: 1fr; }
         }
+
+        .nav-logout-btn {
+            text-decoration: none;
+            color: var(--text-mid);
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-right: 18px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border);
+            transition: all 0.2s;
+        }
+        .nav-logout-btn:hover {
+            color: #c0392b;
+            border-color: #f5c6cb;
+            background: #fdecea;
+        }
     </style>
 </head>
 <body>
@@ -768,12 +785,8 @@
             </svg>
             Diet-Recommendator
         </a>
-        <div class="header-nav">
-            <a href="/get-started" class="active">Dashboard</a>
-            <a href="/get-started">Plans</a>
-            <a href="/logout">Logout</a>
-        </div>
         <div class="header-user">
+            <a href="/logout" class="nav-logout-btn">Logout</a>
             <i class="fa-solid fa-user"></i>
             <span>Profile</span>
         </div>
@@ -782,10 +795,8 @@
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
         <aside class="dashboard-sidebar">
-            <a href="/get-started" class="sidebar-icon active"><i class="fa-solid fa-house"></i></a>
-            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-calendar-days"></i></a>
-            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></a>
-            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-gear"></i></a>
+            <a href="/get-started" class="sidebar-icon active" title="Dashboard"><i class="fa-solid fa-house"></i></a>
+            <a href="#" class="sidebar-icon" id="sidebarCompareBtn" title="Compare Reports"><i class="fa-solid fa-scale-balanced"></i></a>
         </aside>
 
         <!-- Main Body -->
@@ -1138,7 +1149,7 @@
                 bmiRingFill.css('stroke-dashoffset', offset);
             }
 
-            // Open comparison modal
+            // Open comparison modal from active plan card
             compareBtn.click(function() {
                 if (!currentReportId) {
                     alert('Please generate a meal plan first.');
@@ -1157,6 +1168,45 @@
                                 reportSelect.append(`<option value="${report.id}">${report.date}</option>`);
                             }
                         });
+                        compareModal.css('display', 'flex');
+                        comparisonResult.hide();
+                    },
+                    error: function(error) {
+                        hideLoading();
+                        alert('Failed to load previous reports. Please try again.');
+                    }
+                });
+            });
+
+            // Sidebar Compare icon click
+            $('#sidebarCompareBtn').click(function(e) {
+                e.preventDefault();
+                showLoading('Loading past reports...');
+                $.ajax({
+                    url: '/get-reports',
+                    method: 'GET',
+                    success: function(data) {
+                        hideLoading();
+                        if (!data.reports || data.reports.length < 2) {
+                            alert('No previous data found.');
+                            return;
+                        }
+                        
+                        reportSelect.empty();
+                        reportSelect.append('<option value="">Select a previous report</option>');
+                        
+                        let targetCurrentId = currentReportId || data.reports[0].id;
+                        
+                        data.reports.forEach(report => {
+                            if (report.id !== targetCurrentId) {
+                                reportSelect.append(`<option value="${report.id}">${report.date} (BMI: ${report.bmi.toFixed(1)})</option>`);
+                            }
+                        });
+                        
+                        if (!currentReportId) {
+                            currentReportId = targetCurrentId;
+                        }
+                        
                         compareModal.css('display', 'flex');
                         comparisonResult.hide();
                     },
