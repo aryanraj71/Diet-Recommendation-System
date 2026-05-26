@@ -222,8 +222,3 @@ Diet-Recommendation-System/
 ```
 
 ---
-
-## 👥 Authors & Guide
-
-*   **Aryan Raj** & **Anshika Chauhan** — UPES, Dehradun
-*   **Guided by**: Dr. Neeraj Chugh
