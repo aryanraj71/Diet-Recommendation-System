@@ -3,259 +3,470 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet Recommendation System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Diet-Recommendator — Smart Nutrition Powered by ML</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #45a049;
-            --accent-color: #8BC34A;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body, html {
-            height: 100%;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-            overflow: hidden;
-        }
-        
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 50px;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
-        
-        .logo {
-            font-size: 35px;
-            font-weight: 700;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
+            --green: #2ECC71;
+            --green-dark: #27AE60;
+            --green-light: #e8f8f0;
+            --text-dark: #1a1a2e;
+            --text-mid: #4a5568;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --bg: #f0f7f2;
+            --white: #ffffff;
         }
 
-        .tilt-r {
-            display: inline-block;
-            transform: rotate(5deg);
-            transform-origin: 70% 70%;
-            font-style: italic;
-            margin-left: -5px;
-            margin-right: 2px;
-            color: black;
-            font-size: 38px;
-            position: relative;
-            top: -2px;
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text-dark); }
+
+        /* NAVBAR */
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 64px;
+            background: var(--white);
+            box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+            position: sticky; top: 0; z-index: 100;
         }
-        
-        .main-content {
+
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 1.2rem; color: var(--text-dark); }
+        .nav-logo svg { width: 32px; height: 32px; }
+
+        .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-mid); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--green-dark); }
+
+        .btn-signin { background: transparent; border: 1.5px solid var(--green); color: var(--green-dark) !important; padding: 8px 20px; border-radius: 8px; font-weight: 600 !important; transition: all 0.2s !important; }
+        .btn-signin:hover { background: var(--green-light) !important; }
+
+        .btn-getstarted { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white !important; padding: 9px 24px; border-radius: 8px; font-weight: 600 !important; transition: transform 0.2s, box-shadow 0.2s !important; box-shadow: 0 3px 14px rgba(46,204,113,0.35); }
+        .btn-getstarted:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(46,204,113,0.4) !important; }
+
+        /* HERO */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 88vh;
+            align-items: center;
+            padding: 0 64px;
+            gap: 64px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hero-content { display: flex; flex-direction: column; }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--green-light); color: var(--green-dark);
+            padding: 8px 18px; border-radius: 40px; font-size: 0.8rem; font-weight: 600;
+            margin-bottom: 24px; width: fit-content;
+        }
+
+        .hero-badge svg { width: 14px; height: 14px; }
+
+        .hero-title {
+            font-size: 3.2rem; font-weight: 800; line-height: 1.15;
+            color: var(--text-dark); margin-bottom: 20px;
+        }
+
+        .hero-title span { color: var(--green); }
+
+        .hero-desc {
+            font-size: 1.05rem; color: var(--text-light); line-height: 1.7;
+            max-width: 480px; margin-bottom: 36px;
+        }
+
+        .hero-actions { display: flex; align-items: center; gap: 18px; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: white; text-decoration: none; padding: 15px 32px;
+            border-radius: 12px; font-weight: 700; font-size: 1rem;
+            box-shadow: 0 6px 22px rgba(46,204,113,0.40);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(46,204,113,0.5); }
+
+        .btn-primary svg { width: 18px; height: 18px; }
+
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-mid); text-decoration: none;
+            font-weight: 600; font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .btn-secondary:hover { color: var(--green-dark); }
+
+        .hero-stats {
+            display: flex; gap: 40px; margin-top: 52px;
+            padding-top: 40px; border-top: 1px solid var(--border);
+        }
+
+        .stat { display: flex; flex-direction: column; }
+        .stat-num { font-size: 2rem; font-weight: 800; color: var(--text-dark); }
+        .stat-num span { color: var(--green); }
+        .stat-label { font-size: 0.8rem; color: var(--text-light); font-weight: 500; margin-top: 2px; }
+
+        /* HERO IMAGE */
+        .hero-visual {
+            position: relative;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px 50px;
-            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .hero-img-wrapper {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 24px;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.14);
+            position: relative;
         }
-        
-        .hero-content {
-            flex: 1;
-            padding-right: 50px;
-            max-height: 100%;
-            overflow-y: auto;
-        }
-        
-        .hero-title {
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: var(--dark-color);
-            line-height: 1.1;
-        }
-        
-        .hero-title .line1 {
-            display: block;
-        }
-        
-        .hero-title .line2 {
-            display: block;
-            color: var(--primary-color);
-            margin-top: 5px;
-        }
-        
-        .hero-text {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 25px;
-            max-width: 500px;
-        }
-        
-        .consult-btn {
-            padding: 12px 30px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: inline-flex;
+
+        .hero-img-wrapper img { width: 100%; height: 460px; object-fit: cover; display: block; }
+
+        .vitamin-badge {
+            position: absolute;
+            top: 28px;
+            right: -20px;
+            background: white;
+            border-radius: 14px;
+            padding: 14px 20px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+            display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .vitamin-icon {
+            width: 44px; height: 44px;
+            background: var(--green-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .vitamin-icon svg { width: 22px; height: 22px; color: var(--green); }
+
+        .vitamin-badge p { font-size: 0.75rem; color: var(--text-light); }
+        .vitamin-badge strong { font-size: 0.95rem; color: var(--text-dark); display: block; }
+
+        .float-chip {
+            position: absolute;
+            bottom: 28px;
+            left: -24px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 18px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .chip-dot { width: 10px; height: 10px; background: var(--green); border-radius: 50%; }
+        .float-chip span { font-size: 0.8rem; font-weight: 600; color: var(--text-dark); }
+
+        /* FEATURES SECTION */
+        .features {
+            background: var(--white);
+            padding: 80px 64px;
+        }
+
+        .features-inner { max-width: 1280px; margin: 0 auto; }
+
+        .section-label {
+            display: inline-block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--green-dark); margin-bottom: 14px;
+        }
+
+        .section-title { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
+        .section-sub { font-size: 1rem; color: var(--text-light); max-width: 500px; line-height: 1.6; margin-bottom: 56px; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+        .feature-card {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+
+        .feature-icon {
+            width: 52px; height: 52px;
+            background: var(--green-light);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
             margin-bottom: 20px;
         }
-        
-        .consult-btn:hover {
-            background-color: var(--secondary-color);
+
+        .feature-icon svg { width: 24px; height: 24px; color: var(--green-dark); }
+
+        .feature-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+        .feature-card p { font-size: 0.88rem; color: var(--text-light); line-height: 1.65; }
+
+        /* HOW IT WORKS */
+        .how {
+            padding: 80px 64px;
+            background: var(--bg);
         }
-        
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            max-height: 100%;
-            position: relative;
+
+        .how-inner { max-width: 1280px; margin: 0 auto; }
+
+        .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 52px; }
+
+        .step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+
+        .step-num {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; font-weight: 800; color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(46,204,113,0.3);
         }
-        
-        .hero-image img {
-            max-width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        .step h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+        .step p { font-size: 0.82rem; color: var(--text-light); line-height: 1.6; }
+
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, #27AE60 0%, #1a8a4a 100%);
+            padding: 80px 64px;
+            text-align: center;
         }
-        
-        .vitamin-tag {
-            position: absolute;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 18px;
-            transform: rotate(-15deg);
-            right: 100px;
-            top: 10%;
+
+        .cta h2 { font-size: 2.4rem; font-weight: 800; color: white; margin-bottom: 16px; }
+        .cta p { font-size: 1rem; color: rgba(255,255,255,0.85); max-width: 500px; margin: 0 auto 36px; line-height: 1.6; }
+
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: white; color: var(--green-dark);
+            text-decoration: none; padding: 15px 36px; border-radius: 12px;
+            font-weight: 700; font-size: 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            transition: transform 0.2s;
         }
-        
-        .diet-flash p {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+
+        .btn-cta:hover { transform: translateY(-2px); }
+
+        /* FOOTER */
+        footer {
+            background: var(--text-dark);
+            padding: 32px 64px;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                font-size: 28px;
-            }
-            
-            .tilt-r {
-                font-size: 30px;
-                top: -1px;
-            }
-            
-            .main-content {
-                flex-direction: column;
-                padding: 20px;
-                overflow-y: auto;
-            }
-            
-            .hero-content {
-                padding-right: 0;
-                margin-bottom: 20px;
-                text-align: center;
-                max-width: 100%;
-            }
-            
-            .hero-title {
-                font-size: 32px;
-                text-align: center;
-            }
-            
-            .hero-text {
-                margin: 0 auto 20px;
-                text-align: center;
-            }
-            
-            .hero-image {
-                width: 100%;
-            }
-            
-            .hero-image img {
-                max-height: 50vh;
-            }
-            
-            .vitamin-tag {
-                right: 20px;
-                top: 60%;
-            }
-            
-            .diet-flash {
-                text-align: left;
-                margin-left: 20px;
-            }
+
+        footer p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+        footer strong { color: rgba(255,255,255,0.8); }
+
+        @media (max-width: 1024px) {
+            .hero { grid-template-columns: 1fr; padding: 60px 32px; text-align: center; }
+            .hero-content { align-items: center; }
+            .hero-desc { max-width: 100%; }
+            .hero-visual { margin: 0 auto; }
+            .features { padding: 60px 32px; }
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .how { padding: 60px 32px; }
+            .steps { grid-template-columns: 1fr 1fr; }
+            nav { padding: 16px 32px; }
+        }
+
+        @media (max-width: 640px) {
+            .hero-title { font-size: 2.2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; }
+            nav { padding: 14px 20px; }
+            .nav-links { gap: 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <div class="logo">Diet-<span class="tilt-r">R</span>ecommendator</div>
-        </nav>
-        
-        <div class="main-content">
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#e8f8f0"/>
+                <path d="M17 8c-2.5 0-5 1-6.5 3.5C9 13 9 15.5 9 17c1.5 0 4-.5 5.5-2 1.5-1.5 2.5-4 2.5-7z" fill="#2ECC71"/>
+                <path d="M9 17c0-2.5.5-5 2-7" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Diet-Recommendator
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how">How it Works</a></li>
+            <li><a href="/login" class="btn-signin">Sign In</a></li>
+            <li><a href="/signup" class="btn-getstarted">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section>
+        <div class="hero">
             <div class="hero-content">
+                <div class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    AI-Powered &amp; Science-Backed
+                </div>
                 <h1 class="hero-title">
-                    <span class="line1">Consult the</span>
-                    <span class="line2">Nutritionist</span>
+                    Your Personal<br><span>Nutrition Expert</span><br>Powered by ML
                 </h1>
-                <p class="hero-text">
-                    A healthy diet is not just about losing weight, it's about nourishing your body. 
-                    Get personalized meal recommendations based on your unique profile and health goals.
+                <p class="hero-desc">
+                    Calculate your BMI, get personalized meal plans using Random Forest &amp; K-Means algorithms,
+                    and track your health progress — all in one place.
                 </p>
-                <a href="/login" class="consult-btn">  <!-- Changed from /get-started to /login -->
-                    <i class="fas fa-utensils"></i> Get Started
-                </a>
-                
-                <div class="diet-flash">
-                    <p>🍽️ Meals made to match you</p>
-                    <p>🌿 Fuel your body the right way</p>
-                    <p>⚖️ Balanced diets based on your goals</p>
-                    <p>📊 Data-driven, health-focused</p>
+                <div class="hero-actions">
+                    <a href="/login" class="btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        Get Started Free
+                    </a>
+                    <a href="#how" class="btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+                        See how it works
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-num">5<span>+</span></span>
+                        <span class="stat-label">ML Models Used</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-num">100<span>+</span></span>
+                        <span class="stat-label">Food Items</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-num">4<span></span></span>
+                        <span class="stat-label">Meal Categories</span>
+                    </div>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="/static/nutrition.jpg" alt="Healthy Diet">
-                <div class="vitamin-tag">VITAMIN</div>
+
+            <div class="hero-visual">
+                <div class="hero-img-wrapper">
+                    <img src="/static/nutrition.jpg" alt="Healthy nutrition ingredients">
+                </div>
+                <div class="vitamin-badge">
+                    <div class="vitamin-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    </div>
+                    <div>
+                        <strong>BMI Score</strong>
+                        <p>Calculated in real-time</p>
+                    </div>
+                </div>
+                <div class="float-chip">
+                    <div class="chip-dot"></div>
+                    <span>Personalized just for you</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="features-inner">
+            <span class="section-label">Core Capabilities</span>
+            <h2 class="section-title">Everything You Need for Better Nutrition</h2>
+            <p class="section-sub">From smart BMI profiling to AI-driven food clustering — we've got your health covered.</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h3>BMI Classification</h3>
+                    <p>Accurately compute your Body Mass Index and receive a personalized weight category classification with targeted dietary guidance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </div>
+                    <h3>Random Forest Classifier</h3>
+                    <p>Foods are classified into caloric categories using a supervised Random Forest model to perfectly match your energy requirements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
+                    </div>
+                    <h3>K-Means Clustering</h3>
+                    <p>Discover nutrient-similar food alternatives using K-Means and PCA — ensuring you always have diverse, balanced choices available.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h3>Nutrient Analysis Charts</h3>
+                    <p>View real-time comparison charts of your current vs. recommended intake of Calories, Protein, Carbs, Fat, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3>PDF Meal Plan Export</h3>
+                    <p>Download your complete personalized meal plan as a comprehensive PDF including visual charts and nutritional breakdowns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Progress Tracker</h3>
+                    <p>Compare multiple saved reports over time. Track BMI trends and nutrient balance improvements with inspiring progress messages.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+        <div class="how-inner">
+            <span class="section-label">Simple Process</span>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-sub">From your health profile to a downloadable PDF plan — in just four steps.</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Enter Your Metrics</h3>
+                    <p>Fill in your name, age, gender, weight, height, and dietary preferences or medical restrictions.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Get Nutrient Analysis</h3>
+                    <p>The system calculates your BMI and shows a detailed comparison of current vs. recommended daily intake.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Choose Your Meals</h3>
+                    <p>Select foods for Breakfast, Lunch, Snacks, and Dinner from ML-filtered recommendations tailored to your profile.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <h3>Download Your Plan</h3>
+                    <p>Generate a complete PDF plan with nutrition charts and save your report for future progress comparisons.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Start Your Nutrition Journey Today</h2>
+        <p>Join users who use AI-powered meal planning to reach their health goals smarter and faster.</p>
+        <a href="/signup" class="btn-cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Create Free Account
+        </a>
+    </section>
+
+    <footer>
+        <p><strong>Diet-Recommendator</strong> — ML-Powered Diet Recommendation System</p>
+        <p>UPES, Dehradun &nbsp;·&nbsp; Aryan Raj &amp; Anshika Chauhan &nbsp;·&nbsp; Guided by Dr. Neeraj Chugh</p>
+    </footer>
 </body>
 </html>

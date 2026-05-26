@@ -3,535 +3,1077 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet Recommendation System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Dashboard — Diet-Recommendator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #45a049;
-            --accent-color: #8BC34A;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --danger-color: #dc3545;
+            --green: #2ECC71;
+            --green-dark: #27AE60;
+            --green-light: #e8f8f0;
+            --text-dark: #1a1a2e;
+            --text-mid: #4a5568;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --radius: 16px;
         }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+
         body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 30px;
-            background: white;
+
+        /* HEADER */
+        header.dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            background: var(--white);
+            box-shadow: 0 1px 12px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-dark);
+        }
+
+        .header-logo svg { width: 30px; height: 30px; }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: var(--text-mid);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .header-nav a:hover, .header-nav a.active {
+            color: var(--green-dark);
+            background: var(--green-light);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .header-user i {
+            font-size: 1.4rem;
+            color: var(--text-light);
+            background: #e2e8f0;
+            padding: 6px;
+            border-radius: 50%;
+        }
+
+        /* MAIN CONTAINER LAYOUT */
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        aside.dashboard-sidebar {
+            width: 80px;
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 0;
+            gap: 28px;
+        }
+
+        .sidebar-icon {
+            color: var(--text-light);
+            font-size: 1.3rem;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            min-height: 100vh;
+            text-decoration: none;
+            transition: all 0.2s;
         }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .sidebar-icon:hover, .sidebar-icon.active {
+            color: var(--green);
+            background: var(--green-light);
         }
-        
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
+
+        /* DASHBOARD CONTENT */
+        main.dashboard-content {
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
-        
-        .tagline {
-            color: #666;
-            font-size: 1.1rem;
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 32px;
+            align-items: start;
         }
-        
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i { color: var(--green); }
+
+        /* FORM STYLES */
         .form-group {
             margin-bottom: 20px;
         }
-        
-        label {
+
+        .form-group label {
             display: block;
-            margin-bottom: 8px;
+            font-size: 0.82rem;
             font-weight: 600;
-            color: #555;
+            color: var(--text-mid);
+            margin-bottom: 8px;
         }
-        
-        input, select {
+
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border 0.3s;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            outline: none;
+            background: #fafafa;
+            transition: all 0.2s;
         }
-        
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(46,204,113,0.1);
+            background: white;
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 16px;
+            padding-top: 4px;
+        }
+
+        .gender-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            color: var(--text-mid);
+            cursor: pointer;
+        }
+
+        .gender-option input {
+            width: auto;
+        }
+
         .checkbox-group {
-            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        
+
         .checkbox-item {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .checkbox-item input {
-            width: auto;
-            margin-right: 10px;
-        }
-        
-        .btn {
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 600;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--text-mid);
             cursor: pointer;
-            background-color: var(--primary-color);
-            color: white;
-            transition: all 0.3s;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--green);
+            cursor: pointer;
+        }
+
+        .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-        
-        .btn:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        
-        .btn-disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .results {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            display: none;
-        }
-        
-        .bmi-result {
+            width: 100%;
+            padding: 13px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(46,204,113,0.25);
         }
-        
-        .underweight {
-            background-color: #fff3cd;
-            color: #856404;
+
+        .btn:hover {
+            background: var(--green-dark);
+            box-shadow: 0 6px 20px rgba(46,204,113,0.35);
         }
-        
-        .healthy {
-            background-color: #d4edda;
-            color: #155724;
+
+        .btn:disabled, .btn-disabled {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none !important;
         }
-        
-        .overweight {
-            background-color: #f8d7da;
-            color: #721c24;
+
+        .btn-secondary {
+            background: #64748b;
+            box-shadow: none;
         }
-        
-        .meal-category {
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* HEALTH PROFILE DISPLAY */
+        .health-profile-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        /* CIRCULAR BMI GAUGE */
+        .bmi-ring-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+        }
+
+        .bmi-ring-svg {
+            transform: rotate(-90deg);
+            width: 130px;
+            height: 130px;
+        }
+
+        .bmi-ring-bg {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 8;
+        }
+
+        .bmi-ring-fill {
+            fill: none;
+            stroke: var(--green);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+
+        .bmi-ring-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bmi-ring-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.1;
+        }
+
+        .bmi-ring-label {
+            font-size: 0.68rem;
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .health-status-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .status-badge.healthy { background: var(--green-light); color: var(--green-dark); }
+        .status-badge.underweight { background: #fff3cd; color: #856404; }
+        .status-badge.overweight { background: #f8d7da; color: #721c24; }
+
+        .metrics-summary-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px 20px;
+        }
+
+        .metric-summary-item {
+            font-size: 0.82rem;
+            color: var(--text-light);
+        }
+
+        .metric-summary-item strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* RECOMMENDATIONS SECTION */
+        .nutrient-tips {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+            padding: 18px 24px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 32px;
+            font-size: 0.88rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+
+        .nutrient-tips h4 {
+            font-weight: 700;
+            color: var(--green-dark);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .nutrient-tips ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        .nutrient-tips li {
+            margin-bottom: 4px;
+        }
+
+        /* MEAL PLANNING SELECTORS */
+        .meals-customization-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        .meals-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .meal-selection-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Custom headers matching mockup colors */
+        .meal-selection-card.breakfast { background: #fffcf4; border-color: #f7eacc; }
+        .meal-selection-card.lunch { background: #f4faf6; border-color: #d1ebd8; }
+        .meal-selection-card.snack { background: #fef8f4; border-color: #fbdac5; }
+        .meal-selection-card.dinner { background: #f6f7fb; border-color: #dadff0; }
+
+        .meal-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .breakfast .meal-icon-wrapper { background: #fef2d0; color: #e28704; }
+        .lunch .meal-icon-wrapper { background: var(--green-light); color: var(--green-dark); }
+        .snack .meal-icon-wrapper { background: #ffebd3; color: #ff8c00; }
+        .dinner .meal-icon-wrapper { background: #e0e6ff; color: #4361ee; }
+
+        .meal-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .meal-card-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .meal-selection-card select {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            border: 1.5px solid var(--border) !important;
+            border-radius: 10px !important;
+            min-height: 42px !important;
+            padding: 3px 6px !important;
+            background: white !important;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border-color: var(--green) !important;
+        }
+
+        .select2-selection__choice {
+            background-color: var(--green-light) !important;
+            border: 1px solid #d1ebd8 !important;
+            color: var(--green-dark) !important;
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
+            border-radius: 6px !important;
+            padding: 2px 8px !important;
+        }
+
+        .select2-selection__choice__remove {
+            color: var(--green-dark) !important;
+            margin-right: 6px !important;
+        }
+
+        /* DYNAMIC PLOT CARD */
+        .visualization-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 28px;
+            border: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+
+        .visualization-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        .visualization-card h3 i { color: var(--green); }
+
+        .plot-container img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto;
         }
-        
-        .meal-category h3 {
-            color: var(--primary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
+
+        .meal-plan-summary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .meal-summary-category {
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .meal-summary-category-header {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-dark);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        
-        .meal-category ul {
-            list-style-type: none;
+
+        .meal-summary-category-header.breakfast i { color: #e28704; }
+        .meal-summary-category-header.lunch i { color: var(--green-dark); }
+        .meal-summary-category-header.snack i { color: #ff8c00; }
+        .meal-summary-category-header.dinner i { color: #4361ee; }
+
+        .meal-summary-food-item {
+            font-size: 0.88rem;
+            color: var(--text-mid);
+            padding: 4px 0 4px 20px;
+            position: relative;
         }
-        
-        .meal-category li {
-            padding: 8px 0;
-            border-bottom: 1px dashed #eee;
+
+        .meal-summary-food-item::before {
+            content: '•';
+            position: absolute;
+            left: 6px;
+            color: var(--green);
+            font-size: 1.25rem;
+            top: -2px;
+        }
+
+        .meal-summary-food-nutrient-text {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .action-bar .btn {
+            flex: 1;
+        }
+
+        /* COMPARISON MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            width: 90%;
+            max-width: 760px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.2s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+        }
+
+        .close-btn:hover {
+            color: var(--text-dark);
+            background: #e2e8f0;
+        }
+
+        .modal h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
-        .meal-category li:before {
-            content: "•";
-            color: var(--accent-color);
-            font-size: 20px;
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
+
+        .comparison-metric-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
             margin: 20px 0;
         }
-        
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+
+        .comparison-metric-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
         }
-        
+
+        .comparison-metric-card span {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .comparison-metric-card strong {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .inspiring-message-box {
+            background: var(--green-light);
+            color: var(--green-dark);
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-top: 20px;
+            border: 1px solid #d1ebd8;
+        }
+
+        /* LOADING SPINNER overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .spinner-ring {
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-overlay p {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-mid);
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .visualization {
-            margin: 20px 0;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        @media (max-width: 1024px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            aside.dashboard-sidebar { display: none; }
+            header.dashboard-header { padding: 16px 24px; }
+            main.dashboard-content { padding: 24px; }
+            .meals-selection-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        
-        .visualization img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        
-        .visualization h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .food-selection {
-            margin-top: 30px;
-            display: none;
-        }
-        
-        .food-selector {
-            margin-bottom: 20px;
-        }
-        
-        .food-selector label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .select2-container {
-            width: 100% !important;
-            margin-bottom: 10px;
-        }
-        
-        .food-info {
-            font-size: 0.9rem;
-            color: #666;
-            margin-left: 28px;
-        }
-        
-        .nutrient-recommendation {
-            margin: 20px 0;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .nutrient-recommendation h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            overflow: auto; /* Enable scrolling if content overflows */
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 5% auto; /* Reduced margin to give more space */
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%; /* Increased width to 90% */
-            max-width: 900px; /* Increased max-width to accommodate larger charts */
-            max-height: 90vh; /* Set max height to 90% of viewport height */
-            overflow-y: auto; /* Allow vertical scrolling if needed */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .inspiring-message {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #d4edda;
-            color: #155724;
-            border-radius: 5px;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-                margin: 20px auto;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .modal-content {
-                width: 95%; /* Slightly wider on mobile */
-                margin: 10% auto;
-                max-height: 85vh; /* Adjust max height for mobile */
-            }
+
+        @media (max-width: 640px) {
+            .meals-selection-grid { grid-template-columns: 1fr; }
+            .health-profile-grid { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+            .action-bar { flex-direction: column; }
+            .comparison-metric-cards { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-utensils"></i> Personalized Diet Recommendation</h1>
-            <p class="tagline">Get a personalized meal plan based on your nutritional needs</p>
-        </header>
-        
-        <form id="dietForm">
-            <div class="form-group">
-                <label for="name"><i class="fas fa-user"></i> Name</label>
-                <input type="text" id="name" name="name" required>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <a href="/" class="header-logo">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#e8f8f0"/>
+                <path d="M17 8c-2.5 0-5 1-6.5 3.5C9 13 9 15.5 9 17c1.5 0 4-.5 5.5-2 1.5-1.5 2.5-4 2.5-7z" fill="#2ECC71"/>
+                <path d="M9 17c0-2.5.5-5 2-7" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Diet-Recommendator
+        </a>
+        <div class="header-nav">
+            <a href="/" class="active">Dashboard</a>
+            <a href="/">Plans</a>
+            <a href="/">Support</a>
+        </div>
+        <div class="header-user">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <a href="/" class="sidebar-icon active"><i class="fa-solid fa-house"></i></a>
+            <a href="/" class="sidebar-icon"><i class="fa-solid fa-calendar-days"></i></a>
+            <a href="/" class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></a>
+            <a href="/" class="sidebar-icon"><i class="fa-solid fa-gear"></i></a>
+        </aside>
+
+        <!-- Main Body -->
+        <main class="dashboard-content">
+            <div class="grid-layout">
+                <!-- LEFT COLUMN: Input form -->
+                <div class="column-left">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-pen-clip"></i> Enter Your Body Metrics</h2>
+                        <form id="dietForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="John Doe" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="age">Age (years)</label>
+                                <input type="number" id="age" name="age" min="1" max="120" placeholder="30" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div class="gender-options">
+                                    <label class="gender-option">
+                                        <input type="radio" name="gender" value="Male" required checked> Male
+                                    </label>
+                                    <label class="gender-option">
+                                        <input type="radio" name="gender" value="Female" required> Female
+                                    </label>
+                                    <label class="gender-option">
+                                        <input type="radio" name="gender" value="Other" required> Other
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dietType">Diet Preference</label>
+                                <select id="dietType" name="dietType" required>
+                                    <option value="both">Both (Vegetarian &amp; Non-Vegetarian)</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="non-vegetarian">Non-Vegetarian</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="weight">Weight (kg)</label>
+                                <input type="number" id="weight" name="weight" min="1" step="0.1" placeholder="70" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="height">Height (cm)</label>
+                                <input type="number" id="height" name="height" min="50" max="300" placeholder="176" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Dietary Restrictions</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="restrictions" value="diabetes"> Diabetes
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="restrictions" value="hypertension"> High Blood Pressure
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="restrictions" value="celiac"> Gluten-free (Celiac)
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="restrictions" value="lactose"> Lactose Intolerance
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="restrictions" value="nutAllergy"> Nut Allergy
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn">Save Metrics</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Analysis & Results -->
+                <div class="column-right">
+                    <!-- Dashboard welcome / empty message -->
+                    <div id="welcomeMessage" class="card" style="text-align: center; padding: 48px;">
+                        <svg viewBox="0 0 24 24" fill="none" style="width: 60px; height: 60px; color: var(--green); margin-bottom: 16px;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#e8f8f0"/>
+                            <path d="M12 6v6l4 2" stroke="var(--green-dark)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Awaiting Health Metrics</h3>
+                        <p style="font-size: 0.88rem; color: var(--text-light); max-width: 320px; margin: 0 auto;">Please submit the body metrics form on the left to analyze your BMI and generate recommended nutrient targets.</p>
+                    </div>
+
+                    <!-- Health Profile Card -->
+                    <div id="healthProfileCard" class="card" style="display: none;">
+                        <h2><i class="fa-solid fa-heart-pulse"></i> Your Health Profile</h2>
+                        
+                        <div class="health-profile-grid">
+                            <div class="bmi-ring-container">
+                                <svg class="bmi-ring-svg" viewBox="0 0 100 100">
+                                    <circle class="bmi-ring-bg" cx="50" cy="50" r="40"/>
+                                    <circle class="bmi-ring-fill" id="bmiRingFill" cx="50" cy="50" r="40"/>
+                                </svg>
+                                <div class="bmi-ring-text">
+                                    <span class="bmi-ring-value" id="bmiValueText">22.4</span>
+                                    <span class="bmi-ring-label">BMI</span>
+                                </div>
+                            </div>
+                            <div class="health-status-details">
+                                <span class="status-badge" id="bmiStatusBadge">Normal / Healthy Weight</span>
+                                <div class="metrics-summary-list" style="margin-top: 8px;">
+                                    <div class="metric-summary-item">Height: <strong id="summaryHeightText">176 cm</strong></div>
+                                    <div class="metric-summary-item">Weight: <strong id="summaryWeightText">70 kg</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metrics-summary-list">
+                            <div class="metric-summary-item">Age: <strong id="summaryAgeText">30 yrs</strong></div>
+                            <div class="metric-summary-item">Diet Preference: <strong id="summaryDietText">Both</strong></div>
+                            <div class="metric-summary-item" style="grid-column: span 2;">Active Restrictions: <strong id="summaryRestrictionsText">Diabetes, Gluten-free</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Live Nutrient Comparison Chart Card -->
+                    <div id="nutrientAnalysis" class="visualization-card" style="display: none;">
+                        <h3><i class="fa-solid fa-chart-simple"></i> Current vs Recommended Nutrient Intake</h3>
+                        <div class="plot-container">
+                            <img id="nutrientPlot" src="" alt="Nutrient Comparison Chart">
+                        </div>
+                        
+                        <div style="margin-top: 24px;">
+                            <div id="recommendationText" class="nutrient-tips">
+                                <!-- Dynamic tips will load here -->
+                            </div>
+                        </div>
+
+                        <button id="getFoodOptionsBtn" class="btn" style="margin-top: 16px;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Get Food Recommendations
+                        </button>
+                    </div>
+
+                    <!-- Food selection dashboard (Hidden initially) -->
+                    <div class="food-selection" id="foodSelection" style="display: none;">
+                        <h3 class="meals-customization-title"><i class="fa-solid fa-sliders"></i> Customize Your Daily Meals</h3>
+                        
+                        <div class="meals-selection-grid" id="mealSelectors">
+                            <!-- Breakfast -->
+                            <div class="meal-selection-card breakfast">
+                                <div class="meal-icon-wrapper"><i class="fa-solid fa-sun"></i></div>
+                                <span class="meal-card-title">Breakfast</span>
+                                <span class="meal-card-subtitle">Choose up to 3 items</span>
+                                <select id="food-select-breakfast" multiple="multiple" class="food-select"></select>
+                            </div>
+
+                            <!-- Lunch -->
+                            <div class="meal-selection-card lunch">
+                                <div class="meal-icon-wrapper"><i class="fa-solid fa-utensils"></i></div>
+                                <span class="meal-card-title">Lunch</span>
+                                <span class="meal-card-subtitle">Choose up to 3 items</span>
+                                <select id="food-select-lunch" multiple="multiple" class="food-select"></select>
+                            </div>
+
+                            <!-- Snacks -->
+                            <div class="meal-selection-card snack">
+                                <div class="meal-icon-wrapper"><i class="fa-solid fa-mug-hot"></i></div>
+                                <span class="meal-card-title">Snacks</span>
+                                <span class="meal-card-subtitle">Choose up to 3 items</span>
+                                <select id="food-select-snack" multiple="multiple" class="food-select"></select>
+                            </div>
+
+                            <!-- Dinner -->
+                            <div class="meal-selection-card dinner">
+                                <div class="meal-icon-wrapper"><i class="fa-solid fa-moon"></i></div>
+                                <span class="meal-card-title">Dinner</span>
+                                <span class="meal-card-subtitle">Choose up to 3 items</span>
+                                <select id="food-select-dinner" multiple="multiple" class="food-select"></select>
+                            </div>
+                        </div>
+
+                        <button id="generatePlanBtn" class="btn btn-disabled" disabled style="padding: 16px; font-size: 1.05rem;">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Meal Plan
+                        </button>
+                    </div>
+
+                    <!-- Final Meal Plan Results Card -->
+                    <div id="results" class="visualization-card" style="display: none;">
+                        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-dark); margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                            <i class="fa-solid fa-receipt"></i> Your Generated Meal Plan
+                        </h2>
+
+                        <!-- K-Means cluster plot -->
+                        <div id="clusterVisualization" class="visualization-card" style="box-shadow: none; border: 1px solid var(--border); padding: 20px;">
+                            <h3><i class="fa-solid fa-circle-nodes"></i> Food Database Cluster Analysis (PCA)</h3>
+                            <div class="plot-container">
+                                <img id="clusterPlot" src="" alt="Food Clusters Scatter Plot">
+                            </div>
+                        </div>
+
+                        <!-- Selected meal detail summaries -->
+                        <div id="mealPlanDisplay" class="meal-plan-summary-list"></div>
+
+                        <!-- nutrition breakdown stacked bar chart -->
+                        <div id="nutritionVisualization" class="visualization-card" style="box-shadow: none; border: 1px solid var(--border); padding: 20px;">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Nutritional Breakdown of Selected Meals</h3>
+                            <div class="plot-container">
+                                <img id="nutritionPlot" src="" alt="Nutritional Breakdown Stacked Plot">
+                            </div>
+                        </div>
+
+                        <div class="action-bar">
+                            <button id="downloadBtn" class="btn">
+                                <i class="fa-solid fa-file-pdf"></i> Download PDF
+                            </button>
+                            <button id="compareBtn" class="btn btn-secondary">
+                                <i class="fa-solid fa-scale-balanced"></i> Compare reports
+                            </button>
+                            <button id="resetBtn" class="btn btn-secondary">
+                                <i class="fa-solid fa-rotate-left"></i> Start Over
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </main>
+    </div>
+
+    <!-- COMPARISON MODAL -->
+    <div id="compareModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2><i class="fa-solid fa-scale-balanced"></i> Compare Past Reports</h2>
             
             <div class="form-group">
-                <label for="age"><i class="fas fa-birthday-cake"></i> Age</label>
-                <input type="number" id="age" name="age" min="1" max="120" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
-                <select id="gender" name="gender" required>
-                    <option value="">Select your gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                <label for="reportSelect">Select a report from history:</label>
+                <select id="reportSelect" name="reportSelect">
+                    <option value="">Select a report</option>
                 </select>
             </div>
-            
-            <div class="form-group">
-                <label for="dietType"><i class="fas fa-leaf"></i> Diet Preference</label>
-                <select id="dietType" name="dietType" required>
-                    <option value="">Select your preference</option>
-                    <option value="vegetarian">Vegetarian</option>
-                    <option value="non-vegetarian">Non-Vegetarian</option>
-                    <option value="both">Both (Vegetarian & Non-Vegetarian)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="weight"><i class="fas fa-weight"></i> Weight (kg)</label>
-                <input type="number" id="weight" name="weight" min="1" step="0.1" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="height"><i class="fas fa-ruler-vertical"></i> Height (cm)</label>
-                <input type="number" id="height" name="height" min="50" max="300" required>
-            </div>
-            
-            <div class="form-group">
-                <label><i class="fas fa-allergies"></i> Dietary Restrictions (Select all that apply)</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="diabetes" name="restrictions" value="diabetes">
-                        <label for="diabetes">Diabetes</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="hypertension" name="restrictions" value="hypertension">
-                        <label for="hypertension">High Blood Pressure</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="celiac" name="restrictions" value="celiac">
-                        <label for="celiac">Celiac Disease (Gluten-free)</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="lactose" name="restrictions" value="lactose">
-                        <label for="lactose">Lactose Intolerance</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="nutAllergy" name="restrictions" value="nutAllergy">
-                        <label for="nutAllergy">Nut Allergy</label>
+
+            <button id="compareSubmitBtn" class="btn" style="margin-bottom: 24px;">Compare Selected Report</button>
+
+            <!-- Comparison details (hidden until fetched) -->
+            <div id="comparisonResult" style="display: none;">
+                <div class="visualization-card" style="box-shadow: none; border: 1px solid var(--border); padding: 20px;">
+                    <h3><i class="fa-solid fa-chart-column"></i> Nutrition Trends over Time</h3>
+                    <div class="plot-container">
+                        <img id="comparisonPlot" src="" alt="Comparison Chart">
                     </div>
                 </div>
-            </div>
-            
-            <button type="submit" class="btn">
-                <i class="fas fa-check"></i> Get Nutrient Analysis
-            </button>
-        </form>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Analyzing your nutritional needs...</p>
-        </div>
-        
-        <div id="nutrientAnalysis" style="display: none;">
-            <h2><i class="fas fa-chart-pie"></i> Your Nutrient Balance</h2>
-            <div id="bmiResult"></div>
-            <div id="restrictionsNote" style="margin-bottom: 15px;"></div>
-            
-            <div id="nutrientComparison" class="visualization">
-                <h3><i class="fas fa-balance-scale"></i> Current vs Recommended Nutrient Intake</h3>
-                <img id="nutrientPlot" src="" alt="Nutrient Comparison">
-            </div>
-            
-            <div id="nutrientRecommendation" class="nutrient-recommendation">
-                <h3><i class="fas fa-lightbulb"></i> Your Nutrient Recommendations</h3>
-                <div id="recommendationText"></div>
-            </div>
-            
-            <button id="getFoodOptionsBtn" class="btn">
-                <i class="fas fa-utensils"></i> Get Food Recommendations
-            </button>
-        </div>
-        
-        <div class="food-selection" id="foodSelection">
-            <h2><i class="fas fa-utensils"></i> Select Your Meals</h2>
-            
-            <div id="mealSelectors">
-                <!-- Meal selectors will be added here dynamically -->
-            </div>
-            
-            <button id="generatePlanBtn" class="btn btn-disabled" disabled>
-                <i class="fas fa-clipboard-list"></i> Generate Meal Plan
-            </button>
-        </div>
-        
-        <div class="results" id="results" style="display: none;">
-            <h2><i class="fas fa-clipboard-list"></i> Your Personalized Meal Plan</h2>
-            
-            <div id="clusterVisualization" class="visualization">
-                <h3><i class="fas fa-project-diagram"></i> Food Clusters Analysis</h3>
-                <p>Food items clustered by nutritional content using K-means machine learning algorithm</p>
-                <img id="clusterPlot" src="" alt="Food Clusters Visualization">
-            </div>
-            
-            <div id="mealPlanDisplay"></div>
-            
-            <div id="nutritionVisualization" class="visualization">
-                <h3><i class="fas fa-chart-bar"></i> Nutritional Composition</h3>
-                <img id="nutritionPlot" src="" alt="Nutritional Composition Visualization">
-            </div>
-            
-            <div class="action-buttons">
-                <button id="downloadBtn" class="btn">
-                    <i class="fas fa-download"></i> Download Meal Plan (PDF)
-                </button>
-                <button id="compareBtn" class="btn">
-                    <i class="fas fa-balance-scale"></i> Compare
-                </button>
-                <button id="resetBtn" class="btn btn-secondary">
-                    <i class="fas fa-redo"></i> Start Over
-                </button>
-            </div>
-        </div>
-        
-        <!-- Comparison Modal -->
-        <div id="compareModal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">×</span>
-                <h2><i class="fas fa-balance-scale"></i> Compare Reports</h2>
-                <div class="form-group">
-                    <label for="reportSelect">Select a previous report to compare:</label>
-                    <select id="reportSelect" name="reportSelect">
-                        <option value="">Select a report</option>
-                    </select>
-                </div>
-                <button id="compareSubmitBtn" class="btn">
-                    <i class="fas fa-check"></i> Compare
-                </button>
-                <div id="comparisonResult" style="display: none;">
-                    <div class="visualization">
-                        <h3><i class="fas fa-chart-bar"></i> Nutrient Comparison</h3>
-                        <img id="comparisonPlot" src="" alt="Comparison Visualization" style="max-width: 100%; height: auto;">
+
+                <div class="comparison-metric-cards">
+                    <div class="comparison-metric-card">
+                        <span>Previous BMI</span>
+                        <strong id="previousBmi">24.2</strong>
                     </div>
-                    <div class="bmi-result">
-                        <p><strong>Previous BMI:</strong> <span id="previousBmi"></span></p>
-                        <p><strong>Current BMI:</strong> <span id="currentBmi"></span></p>
+                    <div class="comparison-metric-card">
+                        <span>Current BMI</span>
+                        <strong id="currentBmi">22.4</strong>
                     </div>
-                    <div id="inspiringMessage" class="inspiring-message"></div>
                 </div>
+
+                <div id="inspiringMessage" class="inspiring-message-box"></div>
             </div>
         </div>
     </div>
 
+    <!-- LOADING SCREEN OVERLAY -->
+    <div class="loading-overlay" id="loading">
+        <div class="spinner-ring"></div>
+        <p id="loadingText">Processing nutritional data...</p>
+    </div>
+
+    <!-- Script imports -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
     <script>
         $(document).ready(function() {
             const loading = $('#loading');
+            const loadingText = $('#loadingText');
+            const welcomeMessage = $('#welcomeMessage');
+            const healthProfileCard = $('#healthProfileCard');
             const nutrientAnalysis = $('#nutrientAnalysis');
             const foodSelection = $('#foodSelection');
             const results = $('#results');
-            const mealSelectors = $('#mealSelectors');
-            const bmiResult = $('#bmiResult');
-            const restrictionsNote = $('#restrictionsNote');
-            const dietForm = $('#dietForm');
-            const clusterVisualization = $('#clusterVisualization');
-            const clusterPlot = $('#clusterPlot');
-            const nutritionVisualization = $('#nutritionVisualization');
-            const nutritionPlot = $('#nutritionPlot');
-            const nutrientComparison = $('#nutrientComparison');
+            const bmiValueText = $('#bmiValueText');
+            const bmiStatusBadge = $('#bmiStatusBadge');
+            const bmiRingFill = $('#bmiRingFill');
+            const summaryHeightText = $('#summaryHeightText');
+            const summaryWeightText = $('#summaryWeightText');
+            const summaryAgeText = $('#summaryAgeText');
+            const summaryDietText = $('#summaryDietText');
+            const summaryRestrictionsText = $('#summaryRestrictionsText');
             const nutrientPlot = $('#nutrientPlot');
             const recommendationText = $('#recommendationText');
             const downloadBtn = $('#downloadBtn');
@@ -548,6 +1090,7 @@
             const previousBmi = $('#previousBmi');
             const currentBmi = $('#currentBmi');
             const inspiringMessage = $('#inspiringMessage');
+            const dietForm = $('#dietForm');
             
             let currentUserData = null;
             let currentPdfPath = null;
@@ -558,28 +1101,50 @@
                 Snack: [],
                 Dinner: []
             };
-            
+
+            function showLoading(text) {
+                loadingText.text(text);
+                loading.css('display', 'flex');
+            }
+
+            function hideLoading() {
+                loading.hide();
+            }
+
             function initSelect2(selector) {
                 $(selector).select2({
-                    placeholder: "Select food items",
+                    placeholder: "Select food items (Max 3)",
                     allowClear: true,
                     closeOnSelect: false,
-                    width: 'resolve',
+                    width: '100%',
                     maximumSelectionLength: 3
                 });
             }
-            
-            // Open comparison modal and fetch reports
+
+            // Update BMI gauge visual ring offset based on score
+            function updateBmiRing(bmi) {
+                // Dasharray is 251.2 (2 * pi * r = 2 * 3.14 * 40)
+                // Offset calculation: map BMI score from 15 to 35
+                const minBmi = 15;
+                const maxBmi = 35;
+                let percentage = (bmi - minBmi) / (maxBmi - minBmi);
+                percentage = Math.max(0, Math.min(1, percentage)); // Clamp between 0 and 1
+                const offset = 251.2 * (1 - percentage);
+                bmiRingFill.css('stroke-dashoffset', offset);
+            }
+
+            // Open comparison modal
             compareBtn.click(function() {
                 if (!currentReportId) {
                     alert('Please generate a meal plan first.');
                     return;
                 }
-                
+                showLoading('Loading past reports...');
                 $.ajax({
                     url: '/get-reports',
                     method: 'GET',
                     success: function(data) {
+                        hideLoading();
                         reportSelect.empty();
                         reportSelect.append('<option value="">Select a report</option>');
                         data.reports.forEach(report => {
@@ -587,23 +1152,23 @@
                                 reportSelect.append(`<option value="${report.id}">${report.date}</option>`);
                             }
                         });
-                        compareModal.show();
+                        compareModal.css('display', 'flex');
                         comparisonResult.hide();
                     },
                     error: function(error) {
-                        console.error('Error fetching reports:', error);
+                        hideLoading();
                         alert('Failed to load previous reports. Please try again.');
                     }
                 });
             });
-            
+
             // Close comparison modal
-            $('.close-btn').click(function() {
+            $('#closeModalBtn').click(function() {
                 compareModal.hide();
                 comparisonResult.hide();
             });
-            
-            // Handle comparison submission
+
+            // Compare submission
             compareSubmitBtn.click(function() {
                 const selectedReportId = reportSelect.val();
                 if (!selectedReportId) {
@@ -611,7 +1176,7 @@
                     return;
                 }
                 
-                loading.show();
+                showLoading('Comparing nutritional metrics...');
                 $.ajax({
                     url: '/compare-reports',
                     method: 'POST',
@@ -621,63 +1186,64 @@
                         current_report_id: currentReportId
                     }),
                     success: function(data) {
-                        loading.hide();
+                        hideLoading();
                         comparisonPlot.attr('src', `data:image/png;base64,${data.comparison_plot}`);
                         previousBmi.text(data.previous_bmi.toFixed(1));
                         currentBmi.text(data.current_bmi.toFixed(1));
                         inspiringMessage.text(data.inspiring_message);
                         comparisonResult.show();
-                        // Ensure the modal scrolls to show the full chart
-                        compareModal.scrollTop(0);
                     },
                     error: function(error) {
-                        loading.hide();
-                        console.error('Error comparing reports:', error);
+                        hideLoading();
                         alert('Failed to compare reports. Please try again.');
                     }
                 });
             });
-            
+
+            // Reset dashboard to initial state
             resetBtn.click(function() {
                 dietForm.trigger('reset');
+                // Uncheck all boxes
+                $('input[name="restrictions"]').prop('checked', false);
+                
+                welcomeMessage.show();
+                healthProfileCard.hide();
                 nutrientAnalysis.hide();
                 foodSelection.hide();
                 results.hide();
-                clusterVisualization.hide();
-                nutritionVisualization.hide();
-                nutrientComparison.hide();
-                mealSelectors.empty();
-                selectedFoods = {
-                    Breakfast: [],
-                    Lunch: [],
-                    Snack: [],
-                    Dinner: []
-                };
+                
+                // Clear dynamic options
+                $('#food-select-breakfast').val(null).trigger('change');
+                $('#food-select-lunch').val(null).trigger('change');
+                $('#food-select-snack').val(null).trigger('change');
+                $('#food-select-dinner').val(null).trigger('change');
+                
+                selectedFoods = { Breakfast: [], Lunch: [], Snack: [], Dinner: [] };
                 currentUserData = null;
                 currentPdfPath = null;
                 currentReportId = null;
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
-            
+
+            // Download PDF plan
             downloadBtn.click(function() {
                 if (!currentPdfPath) {
-                    alert('No PDF available to download. Please generate a meal plan first.');
+                    alert('No PDF available. Please generate a meal plan first.');
                     return;
                 }
-                
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.src = `/download-pdf?path=${encodeURIComponent(currentPdfPath)}`;
                 document.body.appendChild(iframe);
-                
-                setTimeout(() => {
-                    document.body.removeChild(iframe);
-                }, 5000);
+                setTimeout(() => { document.body.removeChild(iframe); }, 5000);
             });
-            
+
+            // Fetch ML recommended food items dropdown options
             getFoodOptionsBtn.click(function() {
                 if (!currentUserData) return;
                 
-                loading.show();
+                showLoading('Orchestrating Random Forest & K-Means clustering options...');
                 nutrientAnalysis.hide();
                 
                 const mealTypes = ['Breakfast', 'Lunch', 'Snack', 'Dinner'];
@@ -696,27 +1262,8 @@
                         }),
                         success: function(data) {
                             requestsCompleted++;
-                            console.log(`Debug: Received options for ${mealType}:`, data.options);
-                            
                             const selectorId = `food-select-${mealType.toLowerCase()}`;
-                            const selectorDiv = $('#' + selectorId).length ? $('#' + selectorId).parent() : $('<div>').addClass('food-selector');
-                            
-                            let icon;
-                            switch(mealType) {
-                                case 'Breakfast': icon = 'fa-sun'; break;
-                                case 'Lunch': icon = 'fa-utensils'; break;
-                                case 'Snack': icon = 'fa-coffee'; break;
-                                case 'Dinner': icon = 'fa-moon'; break;
-                                default: icon = 'fa-utensils';
-                            }
-                            
-                            const label = $('<label>').attr('for', selectorId)
-                                .html(`<i class="fas ${icon}"></i> Select ${mealType === 'Snack' ? 'Snacks' : mealType} Items (Choose up to 3)`);
-                            
-                            const select = $('#' + selectorId).length ? $('#' + selectorId) : $('<select>').attr('id', selectorId)
-                                .attr('multiple', 'multiple')
-                                .addClass('food-select');
-                            
+                            const select = $('#' + selectorId);
                             select.empty();
                             
                             if (data.options && data.options.length > 0) {
@@ -734,48 +1281,23 @@
                                 select.append($('<option>').text('No options available').prop('disabled', true));
                             }
                             
-                            if (!$('#' + selectorId).length) {
-                                selectorDiv.append(label);
-                                selectorDiv.append(select);
-                                mealSelectors.append(selectorDiv);
-                                initSelect2(`#${selectorId}`);
-                            }
+                            initSelect2(`#${selectorId}`);
                             
                             if (requestsCompleted === mealTypes.length) {
-                                loading.hide();
+                                hideLoading();
                                 foodSelection.show();
                                 foodSelection[0].scrollIntoView({ behavior: 'smooth' });
                             }
                         },
                         error: function(error) {
-                            console.error('Error:', error);
                             requestsCompleted++;
-                            
                             const selectorId = `food-select-${mealType.toLowerCase()}`;
-                            if (!$('#' + selectorId).length) {
-                                const selectorDiv = $('<div>').addClass('food-selector');
-                                let icon;
-                                switch(mealType) {
-                                    case 'Breakfast': icon = 'fa-sun'; break;
-                                    case 'Lunch': icon = 'fa-utensils'; break;
-                                    case 'Snack': icon = 'fa-coffee'; break;
-                                    case 'Dinner': icon = 'fa-moon'; break;
-                                    default: icon = 'fa-utensils';
-                                }
-                                const label = $('<label>').attr('for', selectorId)
-                                    .html(`<i class="fas ${icon}"></i> Select ${mealType === 'Snack' ? 'Snacks' : mealType} Items (Choose up to 3)`);
-                                const select = $('<select>').attr('id', selectorId)
-                                    .attr('multiple', 'multiple')
-                                    .addClass('food-select')
-                                    .append($('<option>').text('Error loading options').prop('disabled', true));
-                                selectorDiv.append(label);
-                                selectorDiv.append(select);
-                                mealSelectors.append(selectorDiv);
-                                initSelect2(`#${selectorId}`);
-                            }
+                            const select = $('#' + selectorId);
+                            select.empty().append($('<option>').text('Error loading options').prop('disabled', true));
+                            initSelect2(`#${selectorId}`);
                             
                             if (requestsCompleted === mealTypes.length) {
-                                loading.hide();
+                                hideLoading();
                                 foodSelection.show();
                                 foodSelection[0].scrollIntoView({ behavior: 'smooth' });
                             }
@@ -784,10 +1306,11 @@
                 });
             });
 
+            // Generate Final Plan
             generatePlanBtn.click(function() {
                 if (!currentUserData) return;
                 
-                loading.show();
+                showLoading('Generating visualizations and compiling PDF...');
                 foodSelection.hide();
                 
                 const foodsToSend = {};
@@ -801,10 +1324,9 @@
                     }));
                 }
                 
-                console.log("Debug: Sending foods to backend:", foodsToSend);
                 if (Object.values(foodsToSend).every(arr => arr.length === 0)) {
-                    loading.hide();
-                    alert('Please select at least one food item for a meal.');
+                    hideLoading();
+                    alert('Please select at least one food item for your meals.');
                     foodSelection.show();
                     return;
                 }
@@ -818,87 +1340,80 @@
                         user_data: {
                             name: $('#name').val(),
                             age: $('#age').val(),
-                            gender: $('#gender').val()
+                            gender: $('input[name="gender"]:checked').val()
                         },
                         bmi: currentUserData.bmi,
                         bmi_category: currentUserData.bmi_category,
                         diet_type: currentUserData.dietType
                     }),
                     success: function(data) {
-                        loading.hide();
+                        hideLoading();
                         results.show();
                         
                         currentPdfPath = data.pdf_path;
                         currentReportId = data.report_id;
                         
                         if (data.cluster_plot) {
-                            clusterPlot.attr('src', `data:image/png;base64,${data.cluster_plot}`);
-                            clusterVisualization.show();
+                            $('#clusterPlot').attr('src', `data:image/png;base64,${data.cluster_plot}`);
                         }
                         
                         mealPlanDisplay.empty();
                         for (const [mealType, foods] of Object.entries(foodsToSend)) {
                             if (foods.length > 0) {
-                                const mealDiv = $('<div>').addClass('meal-category');
+                                const mealDiv = $('<div>').addClass('meal-summary-category');
                                 let icon;
                                 switch(mealType) {
                                     case 'Breakfast': icon = 'fa-sun'; break;
                                     case 'Lunch': icon = 'fa-utensils'; break;
-                                    case 'Snack': icon = 'fa-coffee'; break;
+                                    case 'Snack': icon = 'fa-mug-hot'; break;
                                     case 'Dinner': icon = 'fa-moon'; break;
-                                    default: icon = 'fa-utensils';
                                 }
-                                const mealHeader = $('<h3>').html(`<i class="fas ${icon}"></i> ${mealType}`);
-                                const mealList = $('<ul>');
-                                foods.forEach(food => {
-                                    const foodItem = $('<li>').text(food.name);
-                                    const foodInfo = $('<div>').addClass('food-info')
-                                        .text(`Calories: ${food.calories} | Protein: ${food.protein}g | Carbs: ${food.carbs}g | Fat: ${food.fat}g`);
-                                    mealList.append(foodItem);
-                                    mealList.append(foodInfo);
-                                });
+                                
+                                const mealHeader = $('<div>')
+                                    .addClass(`meal-summary-category-header ${mealType.toLowerCase()}`)
+                                    .html(`<i class="fa-solid ${icon}"></i> ${mealType}`);
+                                
                                 mealDiv.append(mealHeader);
-                                mealDiv.append(mealList);
+                                
+                                foods.forEach(food => {
+                                    const foodItem = $('<div>').addClass('meal-summary-food-item').text(food.name);
+                                    const foodNutrient = $('<div>').addClass('meal-summary-food-nutrient-text')
+                                        .text(`Calories: ${food.calories} | Protein: ${food.protein}g | Carbs: ${food.carbs}g | Fat: ${food.fat}g`);
+                                    mealDiv.append(foodItem).append(foodNutrient);
+                                });
+                                
                                 mealPlanDisplay.append(mealDiv);
                             }
                         }
                         
                         if (data.nutrition_plot) {
-                            nutritionPlot.attr('src', `data:image/png;base64,${data.nutrition_plot}`);
-                            nutritionVisualization.show();
+                            $('#nutritionPlot').attr('src', `data:image/png;base64,${data.nutrition_plot}`);
                         }
                         
                         results[0].scrollIntoView({ behavior: 'smooth' });
                     },
                     error: function(error) {
-                        console.error('Error:', error.responseJSON);
-                        loading.hide();
-                        alert(error.responseJSON.error || 'An error occurred while generating your meal plan. Please try again.');
+                        hideLoading();
+                        alert('An error occurred while compiling your meal plan. Please try again.');
                         foodSelection.show();
                     }
                 });
             });
 
+            // Save Body Metrics and get BMI / Nutrition deficits
             dietForm.submit(function(event) {
                 event.preventDefault();
                 
-                loading.show();
+                showLoading('Calculating BMI and plotting nutrient deficit charts...');
+                welcomeMessage.hide();
+                healthProfileCard.hide();
                 nutrientAnalysis.hide();
                 foodSelection.hide();
                 results.hide();
-                clusterVisualization.hide();
-                nutritionVisualization.hide();
-                mealSelectors.empty();
-                selectedFoods = {
-                    Breakfast: [],
-                    Lunch: [],
-                    Snack: [],
-                    Dinner: []
-                };
                 
                 const name = $('#name').val();
                 const age = $('#age').val();
-                const gender = $('#gender').val();
+                const gender = $('input[name="gender"]:checked').val();
                 const dietType = $('#dietType').val();
                 const weight = parseFloat($('#weight').val());
                 const height = parseFloat($('#height').val());
@@ -906,12 +1421,6 @@
                 const restrictions = $('input[name="restrictions"]:checked').map(function() {
                     return $(this).val();
                 }).get();
-                
-                if (!weight || !height || isNaN(weight) || isNaN(height)) {
-                    loading.hide();
-                    alert('Please enter valid weight and height.');
-                    return;
-                }
                 
                 const bmi = weight / Math.pow(height / 100, 2);
                 let bmiCategory = '';
@@ -941,36 +1450,24 @@
                 }
                 
                 currentUserData = {
-                    name,
-                    age,
-                    gender,
-                    dietType,
-                    weight,
-                    height,
-                    restrictions,
-                    bmi,
-                    bmi_category: bmiCategory,
-                    bmi_class: bmiClass,
-                    bmi_category_num: bmiCategoryNum
+                    name, age, gender, dietType, weight, height, restrictions,
+                    bmi, bmi_category: bmiCategory, bmi_class: bmiClass, bmi_category_num: bmiCategoryNum
                 };
                 
-                bmiResult.html(`
-                    <div class="bmi-result ${bmiClass}">
-                        <strong>Your BMI:</strong> ${bmi.toFixed(1)} - ${bmiCategory}
-                    </div>
-                `);
+                // Populate health summary UI fields
+                bmiValueText.text(bmi.toFixed(1));
+                bmiStatusBadge.text(bmiCategory).attr('class', `status-badge ${bmiClass}`);
+                updateBmiRing(bmi);
                 
-                let notes = [`Diet Type: ${dietType.charAt(0).toUpperCase() + dietType.slice(1).replace('both', 'Both (Vegetarian & Non-Vegetarian)')}`];
-                if (restrictions.length > 0) {
-                    notes.push(`Dietary Restrictions: ${restrictions.join(', ')}`);
-                }
-                restrictionsNote.html(`
-                    <div class="bmi-result healthy">
-                        <strong>Note:</strong> ${notes.join(' | ')}
-                    </div>
-                `);
+                summaryHeightText.text(`${height} cm`);
+                summaryWeightText.text(`${weight} kg`);
+                summaryAgeText.text(`${age} yrs`);
+                summaryDietText.text(dietType === 'both' ? 'Both' : dietType.charAt(0).toUpperCase() + dietType.slice(1));
+                summaryRestrictionsText.text(restrictions.length > 0 ? restrictions.join(', ') : 'None');
                 
-                // Get nutrient analysis
+                healthProfileCard.show();
+
+                // Call server endpoint for matplotlib nutrient plotting
                 $.ajax({
                     url: '/get-nutrient-analysis',
                     method: 'POST',
@@ -980,70 +1477,49 @@
                         diet_type: dietType
                     }),
                     success: function(data) {
-                        loading.hide();
+                        hideLoading();
                         
                         if (data.nutrient_plot) {
                             nutrientPlot.attr('src', `data:image/png;base64,${data.nutrient_plot}`);
                         }
                         
                         let recommendation = '';
-                        if (bmiCategoryNum >= 3) { // Underweight
-                            recommendation = `
-                                <p>Based on your BMI (${bmi.toFixed(1)} - ${bmiCategory}), you need to <strong>increase your calorie intake</strong> to reach a healthy weight.</p>
-                                <p>Your daily calorie target is <strong>${data.target.Calories} kcal</strong>, with:</p>
-                                <ul>
-                                    <li><strong>Protein:</strong> ${data.target.Protein}g (to support muscle growth)</li>
-                                    <li><strong>Carbs:</strong> ${data.target.Carbs}g (for energy)</li>
-                                    <li><strong>Fat:</strong> ${data.target.Fat}g (for essential nutrients)</li>
-                                </ul>
-                                <p>We'll recommend calorie-dense foods to help you gain weight healthily.</p>
-                            `;
-                        } else if (bmiCategoryNum <= 1) { // Overweight
-                            recommendation = `
-                                <p>Based on your BMI (${bmi.toFixed(1)} - ${bmiCategory}), you need to <strong>reduce your calorie intake</strong> to reach a healthy weight.</p>
-                                <p>Your daily calorie target is <strong>${data.target.Calories} kcal</strong>, with:</p>
-                                <ul>
-                                    <li><strong>Protein:</strong> ${data.target.Protein}g (to preserve muscle mass)</li>
-                                    <li><strong>Carbs:</strong> ${data.target.Carbs}g (focus on complex carbs)</li>
-                                    <li><strong>Fat:</strong> ${data.target.Fat}g (healthy fats in moderation)</li>
-                                </ul>
-                                <p>We'll recommend nutrient-dense, lower-calorie foods to support healthy weight loss.</p>
-                            `;
-                        } else { // Healthy
-                            recommendation = `
-                                <p>Based on your BMI (${bmi.toFixed(1)} - ${bmiCategory}), you're at a healthy weight. We'll help you <strong>maintain your current weight</strong> with balanced nutrition.</p>
-                                <p>Your daily calorie target is <strong>${data.target.Calories} kcal</strong>, with:</p>
-                                <ul>
-                                    <li><strong>Protein:</strong> ${data.target.Protein}g (for muscle maintenance)</li>
-                                    <li><strong>Carbs:</strong> ${data.target.Carbs}g (for energy)</li>
-                                    <li><strong>Fat:</strong> ${data.target.Fat}g (for essential nutrients)</li>
-                                </ul>
-                                <p>We'll recommend a variety of foods to maintain your healthy lifestyle.</p>
-                            `;
+                        recommendation += `<h4>Nutritional Guideline Summary</h4>`;
+                        if (bmiCategoryNum >= 3) {
+                            recommendation += `<p>Based on your BMI, you are categorized as <strong>${bmiCategory}</strong>. You need to <strong>increase your calorie intake</strong> to reach a healthy weight.</p>`;
+                        } else if (bmiCategoryNum <= 1) {
+                            recommendation += `<p>Based on your BMI, you are categorized as <strong>${bmiCategory}</strong>. You need to <strong>decrease your calorie intake</strong> to support healthy weight reduction.</p>`;
+                        } else {
+                            recommendation += `<p>Based on your BMI, you are in the <strong>Healthy</strong> category. We will help you maintain your current weight with balanced, healthy meals.</p>`;
                         }
+                        
+                        recommendation += `
+                            <p style="margin-top: 8px;">Your recommended daily targets are:</p>
+                            <ul>
+                                <li><strong>Calories:</strong> ${data.target.Calories} kcal</li>
+                                <li><strong>Protein:</strong> ${data.target.Protein}g</li>
+                                <li><strong>Carbs:</strong> ${data.target.Carbs}g</li>
+                                <li><strong>Fat:</strong> ${data.target.Fat}g</li>
+                            </ul>
+                        `;
                         
                         recommendationText.html(recommendation);
                         nutrientAnalysis.show();
                         nutrientAnalysis[0].scrollIntoView({ behavior: 'smooth' });
                     },
                     error: function(error) {
-                        console.error('Error:', error);
-                        loading.hide();
-                        alert('An error occurred while analyzing your nutritional needs. Please try again.');
+                        hideLoading();
+                        alert('An error occurred during nutrient deficit analysis. Please try again.');
                     }
                 });
             });
 
+            // Capture dropdown select changes to enable or disable "Generate Plan" button
             $(document).on('change', '.food-select', function() {
                 let mealType = $(this).attr('id').replace('food-select-', '');
                 mealType = mealType.charAt(0).toUpperCase() + mealType.slice(1);
                 
                 const selected = $(this).select2('data');
-                
-                if (selected.length > 3) {
-                    $(this).val(selected.slice(0, 3).map(item => item.id)).trigger('change');
-                    return;
-                }
                 
                 selectedFoods[mealType] = selected.map(item => ({
                     id: item.id,

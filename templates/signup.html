@@ -3,218 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - DietRecommendator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Create Account — Diet-Recommendator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --primary: #4CAF50;
-            --light-bg: rgba(255, 255, 255, 0.82);
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border: #e0e0e0;
+            --green: #2ECC71;
+            --green-dark: #27AE60;
+            --green-light: #e8f8f0;
+            --text-dark: #1a1a2e;
+            --text-mid: #4a5568;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --bg: #f0f7f2;
+            --white: #ffffff;
+            --shadow: 0 10px 40px rgba(0,0,0,0.10);
+            --radius: 16px;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background: url('/static/login-bg.jpg') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
+
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+        nav {
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: space-between;
+            padding: 16px 48px;
+            background: var(--white);
+            box-shadow: 0 1px 12px rgba(0,0,0,0.06);
         }
-        
-        .signup-container {
-            width: 380px;
-            background: var(--light-bg);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; font-weight: 700; font-size: 1.2rem; color: var(--text-dark);
         }
-        
-        .signup-header {
-            text-align: center;
-            margin-bottom: 30px;
+
+        .nav-logo svg { width: 32px; height: 32px; }
+
+        .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-mid); font-size: 0.9rem; font-weight: 500; }
+        .nav-links a:hover { color: var(--green-dark); }
+
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 65px);
         }
-        
-        .signup-title {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 5px;
+
+        .left-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 80px;
+            background: var(--bg);
         }
-        
-        .tagline {
-            color: var(--text-light);
-            font-size: 14px;
-            font-weight: 300;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-            font-size: 14px;
-            font-weight: 400;
-        }
-        
-        .form-group input {
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 44px;
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
+            max-width: 440px;
         }
-        
-        .form-group input:focus {
+
+        .form-card h1 { font-size: 1.75rem; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; }
+        .form-card .subtitle { font-size: 0.88rem; color: var(--text-light); margin-bottom: 28px; }
+
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 7px; }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper svg { position: absolute; left: 14px; width: 17px; height: 17px; color: var(--text-light); }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            color: var(--text-dark);
             outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.9);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fafafa;
         }
-        
-        .signup-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background 0.3s;
+
+        .input-wrapper input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(46,204,113,0.12);
+            background: white;
         }
-        
-        .signup-btn:hover {
-            background: #3d8b40;
-        }
-        
-        .login-link {
-            font-size: 14px;
-            color: var(--text-light);
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .login-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .home-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
+
+        .input-wrapper input::placeholder { color: var(--text-light); }
+
+        .password-strength {
+            margin-top: 6px;
+            font-size: 0.75rem;
             color: var(--text-light);
         }
-        
-        .home-link a {
-            color: var(--primary);
-            text-decoration: none;
+
+        .btn-submit {
+            display: block; width: 100%; padding: 14px; margin-top: 24px;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: white; border: none; border-radius: 10px;
+            font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(46,204,113,0.35);
         }
-        
-        .app-info {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            text-align: center;
+
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,204,113,0.45); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .login-link { text-align: center; margin-top: 20px; font-size: 0.875rem; color: var(--text-light); }
+        .login-link a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+
+        .error-msg, .success-msg {
+            padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 18px; display: none;
         }
-        
-        .app-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 5px;
+        .error-msg { background: #fdecea; border: 1px solid #f5c6cb; color: #c0392b; }
+        .success-msg { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+
+        /* RIGHT PANEL */
+        .right-panel { position: relative; overflow: hidden; }
+        .right-panel img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .right-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.28)); }
+
+        .right-content {
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start; padding: 60px 48px;
         }
-        
-        .app-tagline {
-            font-size: 14px;
-            color: var(--text-light);
-            font-weight: 300;
+
+        .feature-chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.92); border-radius: 40px;
+            padding: 8px 18px; margin-bottom: 14px;
+            font-size: 0.85rem; font-weight: 600; color: var(--text-dark);
+        }
+
+        .feature-chip svg { width: 16px; height: 16px; color: var(--green); }
+
+        .right-headline { font-size: 2.4rem; font-weight: 800; color: white; line-height: 1.25; margin-bottom: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+        .right-headline span { color: #7bebb0; }
+
+        .right-sub { font-size: 1rem; color: rgba(255,255,255,0.85); max-width: 320px; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            main { grid-template-columns: 1fr; }
+            .right-panel { display: none; }
+            .left-panel { padding: 40px 24px; }
+            nav { padding: 16px 24px; }
         }
     </style>
 </head>
 <body>
-    <div class="signup-container">
-        <div class="signup-header">
-            <h1 class="signup-title">Create Account</h1>
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#e8f8f0"/>
+                <path d="M17 8c-2.5 0-5 1-6.5 3.5C9 13 9 15.5 9 17c1.5 0 4-.5 5.5-2 1.5-1.5 2.5-4 2.5-7z" fill="#2ECC71"/>
+                <path d="M9 17c0-2.5.5-5 2-7" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Diet-Recommendator
+        </a>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Sign In</a></li>
+        </ul>
+    </nav>
 
+    <main>
+        <div class="left-panel">
+            <div class="form-card">
+                <h1>Create Account</h1>
+                <p class="subtitle">Start your personalized nutrition journey today</p>
+
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="success-msg" id="successMsg"></div>
+
+                <form id="signupForm">
+                    <div class="input-group">
+                        <label for="name">Full Name</label>
+                        <div class="input-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                            <input type="text" id="name" placeholder="Your full name" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                            <input type="email" id="email" placeholder="e.g., alex@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            <input type="password" id="password" placeholder="Create a strong password" required>
+                        </div>
+                        <p class="password-strength" id="strengthText"></p>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">Create Account</button>
+                </form>
+
+                <p class="login-link">Already have an account? <a href="/login">Sign In</a></p>
+            </div>
         </div>
-        
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" required>
+
+        <div class="right-panel">
+            <img src="/static/login-bg.jpg" alt="Healthy food">
+            <div class="right-overlay"></div>
+            <div class="right-content">
+                <div class="feature-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Free to use
+                </div>
+                <div class="feature-chip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+                    ML-Powered
+                </div>
+                <h2 class="right-headline">Smart <span>Nutrition</span><br>Made Personal</h2>
+                <p class="right-sub">Get AI-driven meal plans tailored to your BMI, health goals, and dietary restrictions.</p>
             </div>
-            
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password (min 8 chars)</label>
-                <input type="password" id="password" minlength="8" required>
-            </div>
-            
-            <button type="submit" class="signup-btn">Sign Up</button>
-            
-            <div class="login-link">
-                Already have an account? <a href="/login">Login</a>
-            </div>
-            
-            <div class="home-link">
-                <a href="/">Back to Home</a>
-            </div>
-        </form>
-        
-        <div class="app-info">
-            <div class="app-name">DietRecommendator</div>
-            <div class="app-tagline">Join Us Today!</div>
         </div>
-    </div>
+    </main>
 
     <script>
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        document.getElementById('password').addEventListener('input', function() {
+            const val = this.value;
+            const el = document.getElementById('strengthText');
+            if (!val) { el.textContent = ''; return; }
+            if (val.length < 6) { el.textContent = 'Too short'; el.style.color = '#e74c3c'; }
+            else if (val.length < 10) { el.textContent = 'Moderate strength'; el.style.color = '#e67e22'; }
+            else { el.textContent = 'Strong password ✓'; el.style.color = '#27AE60'; }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const userData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
-            };
-            
+            const btn = document.getElementById('submitBtn');
+            const errEl = document.getElementById('errorMsg');
+            const succEl = document.getElementById('successMsg');
+            btn.textContent = 'Creating account...';
+            btn.disabled = true;
+            errEl.style.display = 'none';
+            succEl.style.display = 'none';
+
             try {
-                const response = await fetch('/signup', {
+                const res = await fetch('/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
                 });
-                
-                const data = await response.json();
-                if (response.ok) {
-                    window.location.href = '/login';
+                const data = await res.json();
+                if (data.success) {
+                    succEl.textContent = 'Account created! Redirecting to login...';
+                    succEl.style.display = 'block';
+                    setTimeout(() => window.location.href = '/login', 1500);
                 } else {
-                    alert(data.error || 'Signup failed');
+                    errEl.textContent = data.error || 'Something went wrong. Please try again.';
+                    errEl.style.display = 'block';
+                    btn.textContent = 'Create Account';
+                    btn.disabled = false;
                 }
             } catch (err) {
-                alert('Network error. Please try again.');
+                errEl.textContent = 'Connection error. Please try again.';
+                errEl.style.display = 'block';
+                btn.textContent = 'Create Account';
+                btn.disabled = false;
             }
         });
     </script>
