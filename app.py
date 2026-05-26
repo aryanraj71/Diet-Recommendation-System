@@ -587,6 +587,8 @@ def create_pdf(selected_foods, user_data, bmi, bmi_category, plot_data=None, clu
 
 @app.route('/')
 def home():
+    if 'user_id' in session:
+        return redirect(url_for('get_started'))
     return render_template('front.html')
 
 @app.route('/get-nutrient-analysis', methods=['POST'])

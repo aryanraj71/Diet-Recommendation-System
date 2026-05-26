@@ -424,7 +424,7 @@
 
         .meals-selection-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
             margin-bottom: 32px;
         }
@@ -439,6 +439,13 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .select2-container {
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         /* Custom headers matching mockup colors */
@@ -738,7 +745,7 @@
             aside.dashboard-sidebar { display: none; }
             header.dashboard-header { padding: 16px 24px; }
             main.dashboard-content { padding: 24px; }
-            .meals-selection-grid { grid-template-columns: repeat(2, 1fr); }
+            .meals-selection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 640px) {
@@ -753,7 +760,7 @@
 
     <!-- Header -->
     <header class="dashboard-header">
-        <a href="/" class="header-logo">
+        <a href="/get-started" class="header-logo">
             <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#e8f8f0"/>
                 <path d="M17 8c-2.5 0-5 1-6.5 3.5C9 13 9 15.5 9 17c1.5 0 4-.5 5.5-2 1.5-1.5 2.5-4 2.5-7z" fill="#2ECC71"/>
@@ -762,9 +769,9 @@
             Diet-Recommendator
         </a>
         <div class="header-nav">
-            <a href="/" class="active">Dashboard</a>
-            <a href="/">Plans</a>
-            <a href="/">Support</a>
+            <a href="/get-started" class="active">Dashboard</a>
+            <a href="/get-started">Plans</a>
+            <a href="/logout">Logout</a>
         </div>
         <div class="header-user">
             <i class="fa-solid fa-user"></i>
@@ -775,10 +782,10 @@
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
         <aside class="dashboard-sidebar">
-            <a href="/" class="sidebar-icon active"><i class="fa-solid fa-house"></i></a>
-            <a href="/" class="sidebar-icon"><i class="fa-solid fa-calendar-days"></i></a>
-            <a href="/" class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></a>
-            <a href="/" class="sidebar-icon"><i class="fa-solid fa-gear"></i></a>
+            <a href="/get-started" class="sidebar-icon active"><i class="fa-solid fa-house"></i></a>
+            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-calendar-days"></i></a>
+            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></a>
+            <a href="/get-started" class="sidebar-icon"><i class="fa-solid fa-gear"></i></a>
         </aside>
 
         <!-- Main Body -->
